@@ -8,6 +8,44 @@ function round(num) {
   var m = Number((Math.abs(num) * 100).toPrecision(15));
   return (Math.round(m) / 100) * Math.sign(num);
 }
+// Fonction qui remplace les caractère avec accent avec un caractère sans accent
+var rules = {
+  a: "àáâãäå",
+  A: "ÀÁÂ",
+  e: "èéêë",
+  E: "ÈÉÊË",
+  i: "ìíîï",
+  I: "ÌÍÎÏ",
+  o: "òóôõöø",
+  O: "ÒÓÔÕÖØ",
+  u: "ùúûü",
+  U: "ÙÚÛÜ",
+  y: "ÿ",
+  c: "ç",
+  C: "Ç",
+  n: "ñ",
+  N: "Ñ",
+};
+
+function getJSONKey(key) {
+  for (acc in rules) {
+    if (rules[acc].indexOf(key) > -1) {
+      return acc;
+    }
+  }
+}
+
+function replaceSpec(Texte) {
+  regstring = "";
+  for (acc in rules) {
+    regstring += rules[acc];
+  }
+  reg = new RegExp("[" + regstring + "]", "g");
+  return Texte.replace(reg, function (t) {
+    return getJSONKey(t);
+  });
+}
+
 //Fonction qui éxécute functionTime toutes les secondes
 setInterval(functionTime, 1000);
 
@@ -32,14 +70,12 @@ function Geo(position) {
       return response.json();
     })
     .then((dataPosition) => {
-      let villeLocalise = dataPosition.features[0].properties.city;
-
-      // let valeurListeDeroulante = VILLELISTEDEROULANTE.options[1].value;
-      // let villeLocalise = valeurListeDeroulante;
+      // let villeLocalise = dataPosition.features[0].properties.city;
+      let villeLocalise = "Eloyes";
       console.log(dataPosition);
       console.log(villeLocalise);
       VILLE.innerHTML = `
-      <p>${villeLocalise}</p>
+      <p>${replaceSpec(villeLocalise)}</p>
 `;
       //Fonction qui permet d'avoir la météo
       fetch(
