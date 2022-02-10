@@ -2,6 +2,7 @@ const TIME = document.querySelector("#time");
 const TEMPERATURE = document.querySelector("#temperature");
 const VILLE = document.querySelector("#ville");
 const BOXIMAGEFOND = document.querySelector(".box-image-fond");
+const LISTEVILLES = document.querySelector("#liste-villes");
 
 //Fonction qui arrondi
 function round(num) {
@@ -70,8 +71,8 @@ function Geo(position) {
       return response.json();
     })
     .then((dataPosition) => {
-      // let villeLocalise = dataPosition.features[0].properties.city;
-      let villeLocalise = "Eloyes";
+      let villeLocalise = dataPosition.features[0].properties.city;
+      // let villeLocalise = "Eloyes";
       console.log(dataPosition);
       console.log(villeLocalise);
       VILLE.innerHTML = `
@@ -113,7 +114,6 @@ function Geo(position) {
               let villeLocaliseEsp = villeLocaliseCaract.split(" ").join(""); //retire les espaces
               let lienReqJson = villeImage + villeLocaliseEsp;
 
-              console.log(dataImagesVilles.villes[0].Paris);
               console.log(lienReqJson);
               console.log(eval(lienReqJson));
               BOXIMAGEFOND.innerHTML = `
@@ -121,6 +121,19 @@ function Geo(position) {
                   lienReqJson
                 )}) no-repeat"class="image-fond"></div>
           `;
+              //Liste déroulante
+              LISTEVILLES.innerHTML = `
+<option value="">CHANGER DE VILLE</option>
+<option value="Dog">${villeLocalise}</option>
+<option value="">Cat</option>
+<option value="">Hamster</option>
+<option value="">Parrot</option>
+<option value="">Spider</option>
+<option value="">Goldfish</option>
+`;
+
+              console.log(LISTEVILLES);
+              console.log(LISTEVILLES[1].label);
             });
         });
     });
