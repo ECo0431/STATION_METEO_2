@@ -3,7 +3,108 @@ const TEMPERATURE = document.querySelector("#temperature");
 const VILLE = document.querySelector("#ville");
 const BOXIMAGEFOND = document.querySelector(".box-image-fond");
 const LISTEVILLES = document.querySelector("#liste-villes");
-
+const NOMDESVILLES = [
+  "Nantes",
+  "Paris",
+  "Marseille",
+  "Lyon",
+  "Toulouse",
+  "Nice",
+  "Montpellier",
+  "Strasbourg",
+  "Bordeaux",
+  "Lille",
+  "Rennes",
+  "Reims",
+  "Toulon",
+  "Le Havre",
+  "Grenoble",
+  "Dijon",
+  "Villeurbanne",
+  "Saint-Denis",
+  "Nîmes",
+  "Clermont-Ferrand",
+  "Le-Mans",
+  "Aix-en-Provence",
+  "Brest",
+  "Tours",
+  "Amiens",
+  "Limoges",
+  "Annecy",
+  "Boulogne-Billancourt",
+  "Perpignan",
+  "Besançon",
+  "Metz",
+  "Orléans",
+  "Rouen",
+  "Argenteuil",
+  "Montreuil",
+  "Mulhouse",
+  "Caen",
+  "Nancy",
+  "Saint-Paul",
+  "Roubaix",
+  "Tourcoing",
+  "Nanterre",
+  "Vitry-sur-Seine",
+  "Créteil",
+  "Avignon",
+  "Poitiers",
+  "Aubervilliers",
+  "Dunkerque",
+  "Aulnay-sous-Bois",
+  "Colombes",
+  "Asnires-sur-Seine",
+  "Versailles",
+  "Saint-Pierre",
+  "Courbevoie",
+  "Le-Tampon",
+  "Cherbourg-en-Cotentin",
+  "Fort-de-France",
+  "Rueil-Malmaison",
+  "Béziers",
+  "Champigny-sur-Marne",
+  "Pau",
+  "La-Rochelle",
+  "Saint-Maur-des-Fossés",
+  "Cannes",
+  "Calais",
+  "Antibes",
+  "Drancy",
+  "Mamoudzou",
+  "Ajaccio",
+  "Mérignac",
+  "Saint-Nazaire",
+  "Colmar",
+  "Issy-les-Moulineaux",
+  "Noisy-le-Grand",
+  "Évry-Courcouronnes",
+  "Vénissieux",
+  "Cergy",
+  "Levallois-Perret",
+  "Valence",
+  "Bourges",
+  "Pessac",
+  "Cayenne",
+  "Ivry-sur-Seine",
+  "Quimper",
+  "La-Seyne-sur-Mer",
+  "Antony",
+  "Villeneuve-d'Ascq",
+  "Clichy",
+  "Troyes",
+  "Montauban",
+  "Neuilly-sur-Seine",
+  "Pantin",
+  "Niort",
+  "Chambry",
+  "Sarcelles",
+  "Le-Blanc-Mesnil",
+  "Lorient",
+];
+const NOMDESVILLESTRIE = NOMDESVILLES.sort();
+const FONDBLANCLOADER = document.querySelector("#fond-blanc");
+const PRELOADER = document.querySelector("#preloader");
 //Fonction qui arrondi
 function round(num) {
   var m = Number((Math.abs(num) * 100).toPrecision(15));
@@ -72,9 +173,9 @@ function Geo(position) {
     })
     .then((dataPosition) => {
       let villeLocalise = dataPosition.features[0].properties.city;
-      // let villeLocalise = "Eloyes";
-      console.log(dataPosition);
-      console.log(villeLocalise);
+      // let villeLocalise = "Montpellier";
+      console.log("dataPosition " + dataPosition);
+      console.log("villeLocalise " + villeLocalise);
       VILLE.innerHTML = `
       <p>${replaceSpec(villeLocalise)}</p>
 `;
@@ -88,7 +189,7 @@ function Geo(position) {
         .then((dataMeteo) => {
           let kelvinToCelsius = dataMeteo.main.temp - 273.15; //Converti les kelvin en degré celcius
           let ventMsToKm = dataMeteo.wind.speed * 3.495;
-          console.log(dataMeteo);
+          console.log("dataMeteo " + dataMeteo);
           console.log(dataMeteo.main.temp);
           console.log("Température " + kelvinToCelsius + "°");
           console.log(dataMeteo.wind.speed);
@@ -114,8 +215,8 @@ function Geo(position) {
               let villeLocaliseEsp = villeLocaliseCaract.split(" ").join(""); //retire les espaces
               let lienReqJson = villeImage + villeLocaliseEsp;
 
-              console.log(lienReqJson);
-              console.log(eval(lienReqJson));
+              console.log("lienReqJson " + lienReqJson);
+              console.log("eval(lienReqJson) " + eval(lienReqJson));
               BOXIMAGEFOND.innerHTML = `
                 <div style="background: url(${eval(
                   lienReqJson
@@ -123,17 +224,64 @@ function Geo(position) {
           `;
               //Liste déroulante
               LISTEVILLES.innerHTML = `
-<option value="">CHANGER DE VILLE</option>
-<option value="Dog">${villeLocalise}</option>
-<option value="">Cat</option>
-<option value="">Hamster</option>
-<option value="">Parrot</option>
-<option value="">Spider</option>
-<option value="">Goldfish</option>
-`;
+            <option value="">CHANGER DE VILLE</option>
+              `;
+              for (let i = 0; i < NOMDESVILLESTRIE.length; i++) {
+                LISTEVILLES.innerHTML += `
+                <option value="${NOMDESVILLESTRIE[i]}">${replaceSpec(
+                  NOMDESVILLESTRIE[i]
+                )}</option>
+                `;
+              }
+              ///Fonction qui permet de récuperer la valeur des options du select à chaque changement d'options
+              LISTEVILLES.addEventListener("change", (event) => {
+                console.log(LISTEVILLES.value);
+                villeLocalise = LISTEVILLES.value;
+                console.log(villeLocalise);
+                let villeLocaliseCaract = villeLocalise.replace(
+                  /[^a-zA-Z ]/g,
+                  ""
+                );
+                let villeLocaliseEsp = villeLocaliseCaract.split(" ").join("");
+                console.log(villeLocaliseEsp);
 
-              console.log(LISTEVILLES);
-              console.log(LISTEVILLES[1].label);
+                let lienReqJson = villeImage + villeLocaliseEsp;
+                console.log(villeLocaliseEsp);
+                console.log("lienReqJson " + lienReqJson);
+                console.log("eval(lienReqJson) " + eval(lienReqJson));
+                BOXIMAGEFOND.innerHTML = `
+                  <div style="background: url(${eval(
+                    lienReqJson
+                  )}) no-repeat"class="image-fond"></div>
+                `;
+                VILLE.innerHTML = `
+                <p>${replaceSpec(villeLocalise)}</p>
+                `;
+
+                fetch(
+                  `https://api.openweathermap.org/data/2.5/weather?q=${villeLocaliseEsp}, France&APPID=6954cc39e1615bfa3d85718a62577874`
+                )
+                  .then((response) => {
+                    return response.json();
+                  })
+                  .then((dataMeteo) => {
+                    let kelvinToCelsius = dataMeteo.main.temp - 273.15; //Converti les kelvin en degré celcius
+                    let ventMsToKm = dataMeteo.wind.speed * 3.495;
+                    console.log("dataMeteo " + dataMeteo);
+                    console.log(dataMeteo.main.temp);
+                    console.log("Température " + kelvinToCelsius + "°");
+                    console.log(dataMeteo.wind.speed);
+                    TEMPERATURE.innerHTML = `      
+                    <div class="box-temp-vent">
+                      <p class="temp">${parseInt(kelvinToCelsius)}°</p>
+                      <div class="trait"></div>
+                      <p class="vent">${parseInt(
+                        ventMsToKm
+                      )}</p><p class="kmh">vent<br>km/h</p>
+                    </div>
+                    `;
+                  });
+              });
             });
         });
     });

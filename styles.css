@@ -31,6 +31,18 @@ body {
   position: relative;
   background-size: cover !important;
   z-index: 2;
+  animation-duration: 10s;
+  animation-name: animIMageFond;
+}
+
+@keyframes animIMageFond {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
 }
 
 p {
@@ -108,4 +120,11 @@ p {
 select {
   font-size: 2em;
   margin-bottom: 20px;
+  border: none;
+  border-radius: 10px;
+  background-color: rgba(255, 255, 255, 0.5);
+}
+
+html {
+  overflow-x: hidden;
 }
